@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            
+            /* Function for 'selecting' and switching tabs. */
+            function openTab(anEvent,tabName) {
+                var i;
+                
+                // hide all the tabs
+                var x = document.getElementsByClassName("tab");
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                
+                // show the one selected
+                document.getElementById(tabName).style.display = "flex";
+                
+                // reset the 'active' style on the bar buttons
+                buttons = document.getElementsByClassName("barButton");
+                for (i = 0; i < buttons.length; i++) {
+                    buttons[i].className = buttons[i].className.replace(" active", "");
+                }
+                
+                // set the 'active' style on the selected tab button
+                anEvent.currentTarget.className += " active";
+            }
+        
+        /* Adjusts the display width for the code listing, and stores the
+         setting (which doesn't work in a quicklook webview). */
+        function codeWidth() {
+            var widthSelector = document.getElementById("widthSelector");
+            var newWidth = (widthSelector.options[widthSelector.selectedIndex].value);
+            document.getElementById("basicListing").style.maxWidth = newWidth;
+            window.localStorage.setItem("listingWidth",newWidth);
+            document.cookie = newWidth;
+        }
+        
+        /* These adjust the font size for the code and screen listing, and store
+         the setting (which doesn't work in a quicklook webview). */
+        function fontSize() {
+            var sliderValue = this.value;
+            document.getElementById("basicListing").style.fontSize = sliderValue+"px";
+            window.localStorage.setItem("fontSize",sliderValue);
+        }
+        
+        function screenSize() {
+            var sliderValue = this.value;
+            document.getElementById("screenListing").style.fontSize = sliderValue+"px";
+            window.localStorage.setItem("screenSize",sliderValue);
+        }
+        </script>
+    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="cid:source.css">
+    <body>
+        <div class="mainContainer">
+            <p>PROGRAM_NAME</p>
+            <p>Size: PROGRAM_SIZE</p>
+        </div>
+        
+        <div class="bar">
+            <div class="barItemContainer">
+                <button class="barItem barButton active" onclick="openTab(event,'basic')">Listing</button>
+                <button class="barItem barButton" style="display: SCREEN_BUTTON_DISPLAY" onclick="openTab(event,'screen')">Screen</button>
+                <button class="barItem barButton" onclick="openTab(event,'audio')">Audio</button>
+            </div>
+        </div>
+        
+        <div id="basic" class="contentContainer tab">
+            <p>Display width:<select id="widthSelector" onInput="codeWidth(this)">
+                    <option value="32ch">32 Columns</option>
+                    <option value="100%">Auto</option>
+                </select>
+                <span class="slider">Size: <input type="range" min="10" max="50" value="15" id="codeSlider"></span>
+            </p>
+            <div id="basicListing" class="codeDisplay">BASIC_HERE</div>
+        </div>
+        
+        <div id="screen" class="contentContainer tab" style="display:none">
+            <p class="slider">Size: <input type="range" min="10" max="50" value="15" id="screenSlider"></p>
+            <div id="screenListing" class="codeDisplay">SCREEN_HERE</div>
+        </div>
+        
+        <div id="audio" class="contentContainer tab" style="display:none">
+            <p>(AUDIO)</p>
+        </div>
+    </body>
+    
+    <script defer>
+        /* Add event listeners for the sliders. */
+        var codeSlider = document.getElementById('codeSlider');
+        codeSlider.addEventListener('input', fontSize);
+        
+        var screenSlider = document.getElementById('screenSlider');
+        screenSlider.addEventListener('input', screenSize);
+        
+        /* These restore the saved settings; sadly doesn't work in a
+         quicklook webview. */
+        var storage = window.localStorage;
+        var inputEvent = new CustomEvent("input");
+        
+        var codeFontSize = storage.getItem("fontSize");
+        if(codeFontSize) {
+            codeSlider.value = codeFontSize;
+            codeSlider.dispatchEvent(inputEvent);
+        }
+        
+        var screenFontSize = storage.getItem("screenSize");
+        if(screenSize) {
+            screenSlider.value = screenFontSize;
+            screenSlider.dispatchEvent(inputEvent);
+        }
+        
+        var listingWidth = storage.getItem("listingWidth");
+        if(listingWidth) {
+            var widthSelector = document.getElementById('widthSelector');
+            widthSelector.value = listingWidth;
+            changeEvent = new CustomEvent("change");
+            widthSelector.dispatchEvent(changeEvent);
+        }
+    </script>
+</html>
+
