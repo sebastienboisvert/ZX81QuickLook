@@ -16,14 +16,7 @@
 #include "ZX81-Character-Table.h"
 #include "ZX81functions.h"
 
-// Some system defines
-
-/* the first byte saved from memory (byte 0 of the .P file) in the ZX81 memory;
- also used as the offset within the buffer during calculations */
-#define FILE_START 0x4009
-
-/* the first byte of BASIC in ZX81 memory */
-#define PROGRAM_START 0x407D
+#include "Third Party/p2raw.c"
 
 
 // PEEKs the value of a 2-byte word (2nd byte MSB)
@@ -36,9 +29,12 @@ unsigned int getByte(FILE *in) {
     return fgetc(in);
 }
 
-/* Given a FILE input, checks the file to make sure it is not invalid/corrupt,
- and assings various values into a ZX81_Program struct, which are the
- offsets within the file (useful for seeking). */
+
+/// Given a FILE input, checks the file to make sure it is not invalid/corrupt,
+/// and assings various values into a ZX81_Program struct, which are the offsets
+/// within the file (useful for seeking).
+/// @param in FILE object for the BASIC program
+/// @return a ZX81_Program struct object
 struct ZX81_Program checkFile(FILE *in) {
     
     // rewind the file
@@ -276,14 +272,16 @@ void get_basic_listing(struct string_buffer codeBuffer, FILE *in) {
     }
 }
 
-/* Produces the screen output. First parameter is a string_buffer struct to
-output the screen display to, and second is the FILE input of the program file.
-If the screen doesn't have any real characters to display (nothing besides 0x00
-and 0x76), the resulting output buffer will be empty (null-terminated) string. */
 
-void get_screen(struct string_buffer screenBuffer, FILE *in) {
+/// Produces the screen output.
+/// If the screen doesn't have any real characters to display (nothing besides
+/// 0x00 and 0x76), the resulting output buffer will be an empty (null-terminated)
+/// string.
+/// @param screenBuffer string_buffer struct to output the screen display to
+/// @param basic_file FILE input of the BASIC program file
+void get_screen(struct string_buffer screenBuffer, FILE *basic_file) {
     
-    struct ZX81_Program program_file = checkFile(in);
+    struct ZX81_Program program_file = checkFile(basic_file);
     
     // check file is valid
     if(invalid == program_file.status) {
@@ -302,7 +300,7 @@ void get_screen(struct string_buffer screenBuffer, FILE *in) {
     unsigned int DFILE_start = program_file.D_FILE +1;
     unsigned int display_length = program_file.VARS - DFILE_start;
     
-    fseek(in, DFILE_start, SEEK_SET);
+    fseek(basic_file, DFILE_start, SEEK_SET);
     
     // 'clear' the buffer
     screenBuffer.buffer[0] = '\0';
@@ -313,7 +311,7 @@ void get_screen(struct string_buffer screenBuffer, FILE *in) {
      until we've iterated through its entire length */
     while(position < display_length)  {
         
-        int byte = getc(in);
+        int byte = getc(basic_file);
         position++;
         
         if(0x76 == byte) {
@@ -330,4 +328,157 @@ void get_screen(struct string_buffer screenBuffer, FILE *in) {
         // clear the buffer to indicate no content
         screenBuffer.buffer[0] = '\0';
     }
+}
+
+
+/// Generates the sound of the save file as a WAV file buffer. Much of this is
+/// taken from the p2raw code.
+/// @param basic_file FILE input of the BASIC program file
+/// @param outBuffer a pointer to a char* buffer; upon successful processing
+/// of the BASIC file, this will contain the WAV data.
+/// @param outBufferSize a pointer to a size_t variable; upon successful
+/// processing this will contain the size of the buffer
+void get_save_sound(FILE *basic_file, char **outBuffer, size_t *outBufferSize) {
+    
+    unsigned long n, k;
+    
+    // allocate temporary buffer to write data to
+    BYTE *basicFileDataBuffer;
+    if ((basicFileDataBuffer = (BYTE *) malloc (MUCH))==NULL) {
+        return;
+    }
+    
+    /* create a in-memory FILE object to use with the p2raw functions, which
+     work on a FILE object. */
+    char *newSoundBuffer;
+    size_t newSoundBufferSize;
+    FILE *outFile = open_memstream(&newSoundBuffer, &newSoundBufferSize);
+    
+    if(outFile) {
+        
+        /* The p2raw functions only produce the raw data, so we need to create
+         a WAV file header first. */
+        create_wav_data(outFile);
+
+        // rewind to start of BASIC file
+        fseek(basic_file, 0, SEEK_SET);
+        
+        // Create some bit of silence at the start of the WAV file
+        memset (basicFileDataBuffer, 0x80, MUCH);
+        for (k=0; k < 22; k++) {
+            fwrite (basicFileDataBuffer, 1, 100, outFile);
+        }
+        
+        /* ZX81 loading expects a program name, so we'll include one; as the
+         filename of the file been processed isn't guaranteed to have only
+         printable characters, we'll use a generic name. */
+        char *filename = "PRODUCED BY ZX81QUICKLOOK BY SEBASTIEN BOISVERt";
+        char convertedFilename [strlen(filename)+1];
+        
+        // figure out the ZX81 characters to use for output into the converted name
+        for (k=0; filename[k]; k++)
+        {
+            char letter[2] = "\0";
+            sprintf(letter, "%c", filename[k]);
+            for(int i = 0; i< 0xBF; i++) {
+                
+                if(!(strcmp(zx81_table[i],letter))) {
+                    convertedFilename[k] = i;
+                }
+            }
+        }
+
+        // Output the name; end-of-name marker (lowercased letter) already set
+        n = strlen(filename); // use filename, as converted name will have null's
+        for (k=0; k < n; k++) {
+            RawOut (outFile, convertedFilename[k]);
+        }
+        
+        
+        // Now process the BASIC file
+        while((n = fread (basicFileDataBuffer, 1, 1000, basic_file))) {
+            
+            for (k=0; k < n; k++) {
+                RawOut (outFile, basicFileDataBuffer[k]);
+            }
+        }
+                
+        free (basicFileDataBuffer);
+        
+
+        // Flush out the FILE output so buffers are updated
+        fflush(outFile);
+        
+        // this is the current total size of sound file
+        int bufferEnd = (int)newSoundBufferSize;
+
+        // Check if audio data length is uneven, and pad as necessary
+        if(0 != bufferEnd % 2) {
+            char pad = 0x80;
+            fwrite(&pad, sizeof(char), 1, outFile);
+            bufferEnd++;
+        }
+
+        // calcuate the final sizes for chunk and sound data
+        int dataSize = (bufferEnd - 44); // the current file size minus header
+        int totalSize = (bufferEnd - 8); // current file size minus first 8 bytes
+
+        // write the values at the appropriate spots in the header
+        fseek(outFile,4, SEEK_SET);
+        fwrite(&totalSize, sizeof(int), 1, outFile);
+        fseek(outFile,40, SEEK_SET);
+        fwrite(&dataSize, sizeof(int), 1, outFile);
+        
+        // seek back to end of file before closing out the file.
+        fseek(outFile,bufferEnd, SEEK_SET);
+        fclose(outFile);
+        
+        // assign the buffer info to the passed in pointers
+        if(outBuffer && outBufferSize) {
+            *outBuffer = newSoundBuffer;
+            *outBufferSize = newSoundBufferSize;
+        }
+    }
+}
+
+
+/// Creates the WAVE header for the file header of writing out the raw sound
+/// data. Leaves the size data info to be filled in later.
+/// @param outFile output file as a FILE pointer
+void create_wav_data(FILE *outFile)
+{
+    // The output of the raw data from p2raw
+    short channels = 1;      // mono
+    short sampleBits = 8;    // 8 bits
+    int sampleRate = 22050;  // 22050 Khz
+    
+    /* Calculate the values; the sound data and total file size will not be
+     known yet so only placeholder values are used.
+     
+     Format per http://www.topherlee.com/software/pcm-tut-wavformat.html ,
+     http://soundfile.sapp.org/doc/WaveFormat/ and
+     http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+     
+     */
+    int rate = (channels*sampleBits*sampleRate)/8;
+    short blockSize = (channels*sampleBits)/8;
+    int chunkSize = 16; // chuck size for the sample, rate, etc. data
+    short audioFormat = 1; // PCM
+    int sampleDataSize = 0; // these two to be filled in later
+    int totalFileSize = 0;
+    
+    // create the header
+    fwrite("RIFF", sizeof(char), 4,outFile);
+    fwrite(&totalFileSize, sizeof(int), 1, outFile);
+    fwrite("WAVE", sizeof(char), 4, outFile);
+    fwrite("fmt ", sizeof(char), 4, outFile);
+    fwrite(&chunkSize, sizeof(int),1,outFile);
+    fwrite(&audioFormat, sizeof(short), 1, outFile);
+    fwrite(&channels, sizeof(short),1,outFile);
+    fwrite(&sampleRate, sizeof(int), 1, outFile);
+    fwrite(&rate, sizeof(int), 1, outFile);
+    fwrite(&blockSize, sizeof(short), 1, outFile);
+    fwrite(&sampleBits, sizeof(short), 1, outFile);
+    fwrite("data", sizeof(char), 4, outFile);
+    fwrite(&sampleDataSize, sizeof(int), 1, outFile);
 }

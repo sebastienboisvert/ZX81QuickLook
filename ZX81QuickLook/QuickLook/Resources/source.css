@@ -108,3 +108,22 @@ select, input {
 #screenListing {
     max-width: 32ch; /* always 32 columns for the screen display */
 }
+
+#audio {
+    min-height: 150px;
+}
+
+#audio-element {
+    width: 100%;
+    height: auto;
+}
+
+.waveform-bg {
+   clip-path: url("#waveform-mask");
+   fill: lightgray;
+}
+
+.waveform-progress {
+   clip-path: url("#waveform-mask");
+   fill: darkgray;
+}

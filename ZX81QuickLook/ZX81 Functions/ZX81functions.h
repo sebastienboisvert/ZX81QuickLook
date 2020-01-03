@@ -11,6 +11,16 @@
 
 #include <stdio.h>
 
+// Some system defines
+
+/* the first byte saved from memory (byte 0 of the .P file) in the ZX81 memory;
+ also used as the offset within the buffer during calculations */
+#define FILE_START 0x4009
+
+/* the first byte of BASIC in ZX81 memory */
+#define PROGRAM_START 0x407D
+
+
 // status enum for the validity of the file
 typedef enum : unsigned int {
     valid,
@@ -51,5 +61,8 @@ void get_basic_listing(struct string_buffer buffer,FILE *basicFile);
 /// @param buffer the string buffer to use for screen output
 /// @param basicFile the FILE pointer to a ZX81 BASIC program file
 void get_screen(struct string_buffer buffer, FILE *basicFile);
+
+void get_save_sound(FILE *basic_file, char **outBuffer, size_t *outBufferSize);
+void create_wav_data(FILE *outFile);
 
 #endif /* ZX81functions_h */

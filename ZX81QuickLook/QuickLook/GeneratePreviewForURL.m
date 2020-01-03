@@ -7,7 +7,9 @@
 
 #include "ZX81functions.h"
 
-OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options);
+OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
+                               CFURLRef url, CFStringRef contentTypeUTI,
+                               CFDictionaryRef options);
 void CancelPreviewGeneration(void *thisInterface, QLPreviewRequestRef preview);
 
 /* -----------------------------------------------------------------------------
@@ -16,12 +18,14 @@ void CancelPreviewGeneration(void *thisInterface, QLPreviewRequestRef preview);
    This function's job is to create preview for designated file
    ----------------------------------------------------------------------------- */
 
-OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options)
+OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
+                               CFURLRef url, CFStringRef contentTypeUTI,
+                               CFDictionaryRef options)
 {
     @autoreleasepool
     {
         /* The line buffer for output of basic/screen lines. ZX81 BASIC cannot be
-         larger than 16KB technically, but this assumes a (theoritical) 16KB statement
+         larger than 16KB technically, but this assumes a (theoretical) 16KB statement
          filled with the largest token (6 characters + 1 space each), with a 4-digit
          line number + space + end character (0x76) for total output of
          (5 + (16384*7) + 1), which isn't really possible for a ZX81 BASIC program but
@@ -40,6 +44,7 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
         
         struct ZX81_Program program;
         NSUInteger fileSize = 0;
+        NSData *soundData = nil;
         
         // process the BASIC .p file
         char filename[1025];
@@ -50,24 +55,37 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
             program = checkFile(basic_file);
             
             if(valid == program.status) {
+                
+                fileSize = program.fileSize;
+
+                // generate BASIC listing and screen preview
                 get_basic_listing(codeBuffer,basic_file);
                 get_screen(screenBuffer,basic_file);
-                fileSize = program.fileSize;
+
+                // generate the sound
+                char *soundBuffer = NULL;
+                size_t soundBufferSize = 0;
+                get_save_sound(basic_file, &soundBuffer, &soundBufferSize);
+                if(NULL != soundBuffer) {
+                    soundData = [NSData dataWithBytesNoCopy:soundBuffer
+                                                     length:soundBufferSize];
+                }                
             }
             
             fclose(basic_file);
             
         } else {
             
-            return noErr; // don't output anything if can't open file
+            return kQLReturnNoError; // don't output anything if can't open file
         }
         
-        // Load a CSS stylesheet to attach to the HTML
+        // Get resources to attach to the HTML
         NSBundle *bundle = [NSBundle bundleWithIdentifier:@"com.sebastienboisvert.ZX81QuickLook"];
         NSURL *cssFile = [bundle URLForResource:@"source" withExtension:@"css"];
         NSURL *htmlFile = [bundle URLForResource:@"source" withExtension:@"html"];
         NSURL *fontFile = [bundle URLForResource:@"zx81_vdu" withExtension:@"ttf"];
-        
+        NSURL *scriptFile = [bundle URLForResource:@"source" withExtension: @"js"];
+
         NSString *htmlString = [NSString stringWithContentsOfURL:htmlFile
                                                         encoding:NSUTF8StringEncoding
                                                            error:nil];
@@ -75,7 +93,7 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
                                                    encoding:NSASCIIStringEncoding];
         NSString *screenString = [NSString stringWithCString:screen_output
                                                     encoding:NSASCIIStringEncoding];
-        
+
  
         /* escape any characters (like '<', '>', etc.) in the BASIC code string
            for HTML insertion */
@@ -102,16 +120,26 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
         htmlString = [htmlString stringByReplacingOccurrencesOfString:@"SCREEN_BUTTON_DISPLAY"
                                                            withString:screenButtonStyle];
 
+        // substitute in the sound data as base64 encoded
+        if(soundData) {
+            NSString *base64SoundDataString = [soundData base64EncodedStringWithOptions:0];
+            
+            htmlString = [htmlString stringByReplacingOccurrencesOfString:@"BASE64_DATA"
+                                                               withString:base64SoundDataString];
+        }
+        
         // create data resources
-        NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
         NSData *cssData = [NSData dataWithContentsOfURL:cssFile];
         NSData *fontData = [NSData dataWithContentsOfURL:fontFile];
-        
+        NSData *scriptData = [NSData dataWithContentsOfURL:scriptFile];
+        NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
+
         // Put metadata and attachment in a dictionary
         NSDictionary *properties = @{ // properties for the HTML data
             (__bridge NSString *)kQLPreviewPropertyTextEncodingNameKey : @"UTF-8",
             (__bridge NSString *)kQLPreviewPropertyMIMETypeKey : @"text/html",
-            // properties for attaching the CSS stylesheet & font
+            
+            // properties for attaching the CSS stylesheet, font and script files
             (__bridge NSString *)kQLPreviewPropertyAttachmentsKey : @{
                 @"source.css" : @{
                     (__bridge NSString *)kQLPreviewPropertyTextEncodingNameKey : @"UTF-8",
@@ -121,7 +149,11 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
                 @"zx81_vdu.ttf" : @{
                     (__bridge NSString *)kQLPreviewPropertyMIMETypeKey : @"font/ttf",
                     (__bridge NSString *)kQLPreviewPropertyAttachmentDataKey: fontData,
-                }
+                },
+                @"source.js" : @{
+                   (__bridge NSString *)kQLPreviewPropertyMIMETypeKey : @"text/javascript",
+                   (__bridge NSString *)kQLPreviewPropertyAttachmentDataKey: scriptData,
+               },
             },
         };
         
@@ -132,7 +164,7 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
                                               (__bridge CFDictionaryRef)properties);
     }
     
-    return noErr;
+    return kQLReturnNoError;
 }
 
 void CancelPreviewGeneration(void *thisInterface, QLPreviewRequestRef preview)

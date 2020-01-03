@@ -2,58 +2,14 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="cid:source.css">
         <script>
-            
-            /* Function for 'selecting' and switching tabs. */
-            function openTab(anEvent,tabName) {
-                var i;
-                
-                // hide all the tabs
-                var x = document.getElementsByClassName("tab");
-                for (i = 0; i < x.length; i++) {
-                    x[i].style.display = "none";
-                }
-                
-                // show the one selected
-                document.getElementById(tabName).style.display = "flex";
-                
-                // reset the 'active' style on the bar buttons
-                buttons = document.getElementsByClassName("barButton");
-                for (i = 0; i < buttons.length; i++) {
-                    buttons[i].className = buttons[i].className.replace(" active", "");
-                }
-                
-                // set the 'active' style on the selected tab button
-                anEvent.currentTarget.className += " active";
-            }
-        
-        /* Adjusts the display width for the code listing, and stores the
-         setting (which doesn't work in a quicklook webview). */
-        function codeWidth() {
-            var widthSelector = document.getElementById("widthSelector");
-            var newWidth = (widthSelector.options[widthSelector.selectedIndex].value);
-            document.getElementById("basicListing").style.maxWidth = newWidth;
-            window.localStorage.setItem("listingWidth",newWidth);
-            document.cookie = newWidth;
-        }
-        
-        /* These adjust the font size for the code and screen listing, and store
-         the setting (which doesn't work in a quicklook webview). */
-        function fontSize() {
-            var sliderValue = this.value;
-            document.getElementById("basicListing").style.fontSize = sliderValue+"px";
-            window.localStorage.setItem("fontSize",sliderValue);
-        }
-        
-        function screenSize() {
-            var sliderValue = this.value;
-            document.getElementById("screenListing").style.fontSize = sliderValue+"px";
-            window.localStorage.setItem("screenSize",sliderValue);
-        }
+            /* The base64 data for the sound will be substituted here. */
+            let soundURL = new URL("data:audio/wav;base64,BASE64_DATA");
         </script>
+        <script defer src="cid:source.js"></script>
     </head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="cid:source.css">
     <body>
         <div class="mainContainer">
             <p>PROGRAM_NAME</p>
@@ -84,42 +40,21 @@
         </div>
         
         <div id="audio" class="contentContainer tab" style="display:none">
-            <p>(AUDIO)</p>
+            
+          <!-- this SVG is the "background" and progress bar -->
+          <svg viewbox="0 0 100 100" class="waveform-container" preserveaspectratio="none">
+              <rect class="waveform-bg" x="0" y="0" height="100" width="100"/>
+              <rect id="waveform-progress" class="waveform-progress" x="0" y="0" height="100" width="0"/>
+          </svg>
+
+          <!-- this SVG is the "clipping mask" - the waveform bars -->
+          <svg height="0" width="0">
+              <defs>
+                  <clippath id="waveform-mask"></clippath>
+              </defs>
+          </svg>
+           <audio id="audio-element" controls="controls"></audio>
         </div>
     </body>
-    
-    <script defer>
-        /* Add event listeners for the sliders. */
-        var codeSlider = document.getElementById('codeSlider');
-        codeSlider.addEventListener('input', fontSize);
-        
-        var screenSlider = document.getElementById('screenSlider');
-        screenSlider.addEventListener('input', screenSize);
-        
-        /* These restore the saved settings; sadly doesn't work in a
-         quicklook webview. */
-        var storage = window.localStorage;
-        var inputEvent = new CustomEvent("input");
-        
-        var codeFontSize = storage.getItem("fontSize");
-        if(codeFontSize) {
-            codeSlider.value = codeFontSize;
-            codeSlider.dispatchEvent(inputEvent);
-        }
-        
-        var screenFontSize = storage.getItem("screenSize");
-        if(screenSize) {
-            screenSlider.value = screenFontSize;
-            screenSlider.dispatchEvent(inputEvent);
-        }
-        
-        var listingWidth = storage.getItem("listingWidth");
-        if(listingWidth) {
-            var widthSelector = document.getElementById('widthSelector');
-            widthSelector.value = listingWidth;
-            changeEvent = new CustomEvent("change");
-            widthSelector.dispatchEvent(changeEvent);
-        }
-    </script>
 </html>
 

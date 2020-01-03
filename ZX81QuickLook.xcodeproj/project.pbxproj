@@ -16,6 +16,7 @@
 		BE473A7D235FED21009347EF /* source.css in Resources */ = {isa = PBXBuildFile; fileRef = BE473A7B235FED21009347EF /* source.css */; };
 		BE7FD1FB2341A15800F5629A /* ZX81functions.h in Headers */ = {isa = PBXBuildFile; fileRef = BE7FD1F92341A15800F5629A /* ZX81functions.h */; };
 		BE7FD1FC2341A15800F5629A /* ZX81functions.c in Sources */ = {isa = PBXBuildFile; fileRef = BE7FD1FA2341A15800F5629A /* ZX81functions.c */; };
+		BEC15C2323B941A20063BFB1 /* source.js in Resources */ = {isa = PBXBuildFile; fileRef = BEC15C2223B941A20063BFB1 /* source.js */; };
 		BEC24C20235D3BE600CF5C34 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BEC24C1F235D3BE600CF5C34 /* main.c */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		BE29092223A73620007A294F /* zx81_vdu.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = zx81_vdu.ttf; sourceTree = "<group>"; };
+		BE29092523B1A55A007A294F /* p2raw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = p2raw.c; sourceTree = "<group>"; };
 		BE473A73235FE585009347EF /* GenerateThumbnailForURL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GenerateThumbnailForURL.c; sourceTree = "<group>"; };
 		BE473A74235FE585009347EF /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		BE473A75235FE585009347EF /* GeneratePreviewForURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratePreviewForURL.m; sourceTree = "<group>"; };
@@ -42,6 +44,7 @@
 		BE7FD1ED2340426400F5629A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE7FD1F92341A15800F5629A /* ZX81functions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZX81functions.h; sourceTree = "<group>"; };
 		BE7FD1FA2341A15800F5629A /* ZX81functions.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ZX81functions.c; sourceTree = "<group>"; };
+		BEC15C2223B941A20063BFB1 /* source.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = source.js; sourceTree = "<group>"; };
 		BEC1E57123A7126A0082D8AC /* ZX81-Character-Table.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ZX81-Character-Table.h"; sourceTree = "<group>"; };
 		BEC24C1D235D3BE600CF5C34 /* ZX81QL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ZX81QL; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC24C1F235D3BE600CF5C34 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
@@ -65,6 +68,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BE29092423B1A543007A294F /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				BE29092523B1A55A007A294F /* p2raw.c */,
+			);
+			path = "Third Party";
+			sourceTree = "<group>";
+		};
 		BE473A72235FE585009347EF /* QuickLook */ = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +92,7 @@
 			children = (
 				BE473A7B235FED21009347EF /* source.css */,
 				BE473A7A235FED21009347EF /* source.html */,
+				BEC15C2223B941A20063BFB1 /* source.js */,
 				BE29092223A73620007A294F /* zx81_vdu.ttf */,
 			);
 			path = Resources;
@@ -120,6 +132,7 @@
 				BEC1E57123A7126A0082D8AC /* ZX81-Character-Table.h */,
 				BE7FD1F92341A15800F5629A /* ZX81functions.h */,
 				BE7FD1FA2341A15800F5629A /* ZX81functions.c */,
+				BE29092423B1A543007A294F /* Third Party */,
 			);
 			path = "ZX81 Functions";
 			sourceTree = "<group>";
@@ -222,6 +235,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEC15C2323B941A20063BFB1 /* source.js in Resources */,
 				BE29092323A73620007A294F /* zx81_vdu.ttf in Resources */,
 				BE473A7D235FED21009347EF /* source.css in Resources */,
 				BE473A7C235FED21009347EF /* source.html in Resources */,
