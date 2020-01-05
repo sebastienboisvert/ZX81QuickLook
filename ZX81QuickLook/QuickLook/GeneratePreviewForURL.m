@@ -30,7 +30,7 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
          line number + space + end character (0x76) for total output of
          (5 + (16384*7) + 1), which isn't really possible for a ZX81 BASIC program but
          this makes it safe to assume as possible maximum (rounded up). */
-        char basic_output[114700] = "COULD NOT LOAD BASIC FILE";
+        char basic_output[114700] = "COULD NOT PROCESS BASIC FILE";
 
         struct string_buffer codeBuffer;
         codeBuffer.buffer = basic_output;
@@ -112,13 +112,23 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 
         
         // check if the Screen button needs to be hidden
-        NSString *screenButtonStyle = @"inline-block";
+        NSString *buttonStyle = @"inline-block";
         if(!strlen(screen_output)) {
-            screenButtonStyle = @"none";
+            buttonStyle = @"none";
         }
 
         htmlString = [htmlString stringByReplacingOccurrencesOfString:@"SCREEN_BUTTON_DISPLAY"
-                                                           withString:screenButtonStyle];
+                                                           withString:buttonStyle];
+        
+        // hide Audio button if not a valid file
+        buttonStyle = @"inline-block";
+        if(!soundData || valid != program.status) {
+            buttonStyle = @"none";
+        }
+        
+        htmlString = [htmlString stringByReplacingOccurrencesOfString:@"AUDIO_BUTTON_DISPLAY"
+                                                           withString:buttonStyle];
+
 
         // substitute in the sound data as base64 encoded
         if(soundData) {

@@ -77,6 +77,11 @@ struct ZX81_Program checkFile(FILE *in) {
     
     // make sure the values are sane for the file size
     if((ELINE - FILE_START) > fileStat.st_size) {
+        program.status = invalid;
+    }
+    
+    // if system variable offsets don't make sense, mark as corrupt
+    if(!(program.D_FILE <= program.VARS && program.VARS <= program.E_LINE)) {
         program.status = corrupt;
     }
     
