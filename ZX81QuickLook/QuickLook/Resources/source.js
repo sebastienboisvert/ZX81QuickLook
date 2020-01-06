@@ -50,8 +50,8 @@ function screenSize() {
 
 /* Sets up the audio wave */
 
-const NUMBER_OF_BUCKETS = 350; // number of "bars" the waveform should have
-const SPACE_BETWEEN_BARS = 0.0; // from 0 (no gaps between bars) to 1 (only gaps - bars won't be visible)
+const NUMBER_OF_BUCKETS = 400; // number of "bars" the waveform should have
+const SPACE_BETWEEN_BARS = -0.05; // from 0 (no gaps between bars) to 1 (only gaps - bars won't be visible)
 let audioCtx = new window.webkitAudioContext();
 fetch(soundURL).then(response => {
     response.arrayBuffer().then(audioData => {
