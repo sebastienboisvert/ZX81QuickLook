@@ -59,25 +59,45 @@ fetch(soundURL).then(response => {
             decodedAudioData = buffer.getChannelData(0);
             let bucketDataSize = Math.floor(decodedAudioData.length / NUMBER_OF_BUCKETS);
             let buckets = [];
+            var largest = 0; // track the largest value to use as ratio
             for (var i = 0; i < NUMBER_OF_BUCKETS; i++) {
                 let startingPoint = i * bucketDataSize;
                 let endingPoint = startingPoint + bucketDataSize;
-                let avg = 0
+                                            
+                /* We'll caculate an average for the 'slice', which gives a pretty
+                 good representation of the sound */
+                let total = 0
                 for (var j = startingPoint; j <= endingPoint; j++) {
-                        avg += decodedAudioData[j];
+                        total += decodedAudioData[j];
                 }
-                let size = Math.max(Math.abs(avg/(endingPoint-startingPoint)),0.00001);
-                buckets.push(size * 150);
+            
+                /* As there's never any silence in a save file, we want a minimum
+                 value to show so there's no blank spots in the waveform. */
+                var avg = Math.max(total/(endingPoint-startingPoint),0.00001);
+                while(avg < 0.0001) {
+                    // boost the average until we have something substantial
+                    avg *= 10;
+                }
+
+                largest = Math.max(largest,avg);
+                buckets.push(avg * 100);
             }
+
+            /* We want the largest (tallest) bar to fill the view the most, and
+             all other bars will be a relative ratio of it (here we want the
+             tallest bar to fill 85% of the view height). */
+            let ratio = (0.85/largest);
+            
+            let bucketSVGWidth = 100.0 / buckets.length;
             document.getElementById('waveform-mask').innerHTML = buckets.map((bucket, i) => {
-                let bucketSVGWidth = 100.0 / buckets.length;
-                let bucketSVGHeight = bucket * 100.0; // fill 3/4 of the height
+                let bucketSVGHeight = bucket * ratio;
                 return `<rect
                     x=${bucketSVGWidth * i + SPACE_BETWEEN_BARS / 2.0}
                     y=${ (100 - bucketSVGHeight) / 2.0}
                     width=${bucketSVGWidth - SPACE_BETWEEN_BARS}
                     height=${bucketSVGHeight} />`;
             }).join('');
+                                            
             let audioElement = document.getElementById('audio-element');
             audioElement.src = soundURL;
             let waveformProgress = document.getElementById('waveform-progress');
