@@ -7,6 +7,8 @@
         <script>
             /* The base64 data for the sound will be substituted here. */
             let soundURL = new URL("data:audio/wav;base64,BASE64_DATA");
+            const NUMBER_OF_BUCKETS = NUMBER_BARS; // number of "bars" the waveform should have
+            const WAVE_UPDATE_FREQ = WAVE_FREQ; // time in ms for wave progress
         </script>
         <script defer src="cid:source.js"></script>
     </head>
@@ -27,15 +29,15 @@
         <div id="basic" class="contentContainer tab">
             <p>Display width:<select id="widthSelector" onInput="codeWidth(this)">
                     <option value="32ch">32 Columns</option>
-                    <option value="100%">Auto</option>
+                    <option value="100%" AUTO_DEFAULT>Auto</option>
                 </select>
-                <span class="slider">Size: <input type="range" min="10" max="50" value="15" id="codeSlider"></span>
+                <span class="slider">Size: <input type="range" min="10" max="50" value="CODE_SIZE" id="codeSlider"></span>
             </p>
             <div id="basicListing" class="codeDisplay">BASIC_HERE</div>
         </div>
         
         <div id="screen" class="contentContainer tab" style="display:none">
-            <p class="slider">Size: <input type="range" min="10" max="50" value="15" id="screenSlider"></p>
+            <p class="slider">Size: <input type="range" min="10" max="50" value="SCREEN_SIZE" id="screenSlider"></p>
             <div id="screenListing" class="codeDisplay">SCREEN_HERE</div>
         </div>
         

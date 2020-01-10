@@ -7,6 +7,14 @@
 
 #include "ZX81functions.h"
 
+#define autoWidthKey    @"autoWidth"
+#define fontSizeKey     @"fontSize"
+#define screenSizeKey   @"screenSize"
+#define waveBarsKey     @"waveBars"
+#define progressFreqKey @"progressFreq"
+#define windowHeightKey @"windowHeight"
+#define windowWidthKey  @"windowWidth"
+
 OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
                                CFURLRef url, CFStringRef contentTypeUTI,
                                CFDictionaryRef options);
@@ -24,6 +32,17 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 {
     @autoreleasepool
     {
+        // Setup defaults for the bundle's domain, and set the default settings
+        NSUserDefaults *defaults = [[NSUserDefaults alloc]
+                                    initWithSuiteName:@"com.sebastienboisvert.ZX81QuickLook"];
+        [defaults registerDefaults:
+         @{autoWidthKey:@(NO),   // auto-width
+           fontSizeKey:@(15),    // code font size
+           screenSizeKey:@(15),  // screen font size
+           waveBarsKey:@(400),   // number of bars for soundwave
+           progressFreqKey:@(25) // update frequency in ms
+         }];
+        
         /* The line buffer for output of basic/screen lines. ZX81 BASIC cannot be
          larger than 16KB technically, but this assumes a (theoretical) 16KB statement
          filled with the largest token (6 characters + 1 space each), with a 4-digit
@@ -100,6 +119,43 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
         basicString = [[NSXMLNode textWithStringValue:basicString] XMLString];
         screenString = [[NSXMLNode textWithStringValue:screenString] XMLString];
 
+        // get/set the various defaults
+        NSUInteger bars = [defaults integerForKey:waveBarsKey];
+        bars = MIN(2000,(MAX(bars,400))); // keep range between 400-2000
+
+        htmlString = [htmlString stringByReplacingOccurrencesOfString:@"NUMBER_BARS"
+                                                           withString:@(bars).stringValue];
+        
+        BOOL autoSelected = [defaults boolForKey:autoWidthKey];
+        htmlString = [htmlString stringByReplacingOccurrencesOfString:@"AUTO_DEFAULT"
+                                                           withString:(autoSelected ? @"selected" : @"")];
+        
+        NSUInteger codeSize = [defaults integerForKey:fontSizeKey];
+        codeSize = MIN(50,(MAX(codeSize,10))); // range 10-50
+        htmlString = [htmlString stringByReplacingOccurrencesOfString:@"CODE_SIZE"
+                                                           withString:@(codeSize).stringValue];
+
+        NSUInteger screenSize = [defaults integerForKey:screenSizeKey];
+        screenSize = MIN(50,(MAX(screenSize,10))); // range 10-50
+        htmlString = [htmlString stringByReplacingOccurrencesOfString:@"SCREEN_SIZE"
+                                                           withString:@(screenSize).stringValue];
+
+        NSUInteger updateFreq = [defaults integerForKey:progressFreqKey];
+        updateFreq = MIN(500,(MAX(updateFreq,25))); // range 25-500
+        htmlString = [htmlString stringByReplacingOccurrencesOfString:@"WAVE_FREQ"
+                                                           withString:@(updateFreq).stringValue];
+        
+        // the desired window height/width, if any set, otherwise use the defaults
+        NSUInteger windowWidth = [defaults integerForKey:windowWidthKey];
+        if(!windowWidth) {
+            windowWidth = [bundle.infoDictionary[@"QLPreviewWidth"] unsignedIntValue];
+        }
+        
+        NSUInteger windowHeight = [defaults integerForKey:windowHeightKey];
+        if(!windowHeight) {
+            windowHeight = [bundle.infoDictionary[@"QLPreviewHeight"] unsignedIntValue];
+        }
+
         // replace tokens with strings in HTML template
         htmlString = [htmlString stringByReplacingOccurrencesOfString:@"BASIC_HERE"
                                                            withString:basicString];
@@ -165,6 +221,9 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
                    (__bridge NSString *)kQLPreviewPropertyAttachmentDataKey: scriptData,
                },
             },
+            // preview window size
+            (__bridge NSString *)kQLPreviewPropertyHeightKey : @(windowHeight),
+            (__bridge NSString *)kQLPreviewPropertyWidthKey : @(windowWidth)
         };
         
         // Pass preview data and metadata/attachment dictionary to QuickLook

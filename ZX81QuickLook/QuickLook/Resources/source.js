@@ -21,36 +21,28 @@ function openTab(anEvent,tabName) {
    anEvent.currentTarget.className += " active";
 }
 
-/* Adjusts the display width for the code listing, and stores the
-setting (which doesn't work in a quicklook webview). */
+/* Adjusts the display width for the code listing. */
 function codeWidth() {
    var widthSelector = document.getElementById("widthSelector");
    var newWidth = (widthSelector.options[widthSelector.selectedIndex].value);
    document.getElementById("basicListing").style.maxWidth = newWidth;
-   window.localStorage.setItem("listingWidth",newWidth);
-   document.cookie = newWidth;
 }
 
-/* These adjust the font size for the code and screen listing, and store
-the setting (which doesn't work in a quicklook webview). */
+/* These adjust the font size for the code and screen listing. */
 function fontSize() {
-   var sliderValue = this.value;
-   document.getElementById("basicListing").style.fontSize = sliderValue+"px";
-   window.localStorage.setItem("fontSize",sliderValue);
+    var codeSlider = document.getElementById('codeSlider');
+    var sliderValue = codeSlider.value;
+    document.getElementById("basicListing").style.fontSize = sliderValue+"px";
 }
 
 function screenSize() {
-   var sliderValue = this.value;
-   document.getElementById("screenListing").style.fontSize = sliderValue+"px";
-   window.localStorage.setItem("screenSize",sliderValue);
+    var screenSlider = document.getElementById('screenSlider');
+    var sliderValue = screenSlider.value;
+    document.getElementById("screenListing").style.fontSize = sliderValue+"px";
 }
-
-// set the audio source on the <audio> element
-//document.getElementById("audio-element").src = soundURL;
 
 /* Sets up the audio wave */
 
-const NUMBER_OF_BUCKETS = 400; // number of "bars" the waveform should have
 const SPACE_BETWEEN_BARS = -0.05; // from 0 (no gaps between bars) to 1 (only gaps - bars won't be visible)
 let audioCtx = new window.webkitAudioContext();
 fetch(soundURL).then(response => {
@@ -101,10 +93,10 @@ fetch(soundURL).then(response => {
             let audioElement = document.getElementById('audio-element');
             audioElement.src = soundURL;
             let waveformProgress = document.getElementById('waveform-progress');
-            // every 25 milliseconds, update the waveform-progress SVG with a new width - the percentage of time elapsed on the audio file
+            // every WAVE_UPDATE_FREQ milliseconds, update the waveform-progress SVG with a new width - the percentage of time elapsed on the audio file
             setInterval(() => {
                 waveformProgress.setAttribute('width', (audioElement.currentTime / audioElement.duration * 100) || 0);
-            }, 25);
+            }, WAVE_UPDATE_FREQ);
         }, e => {
             // callback for any errors with decoding audio data
             console.log('Error with decoding audio data' + e.err);
@@ -126,27 +118,7 @@ codeSlider.addEventListener('input', fontSize);
 var screenSlider = document.getElementById('screenSlider');
 screenSlider.addEventListener('input', screenSize);
 
-/* These restore the saved settings; sadly doesn't work in a
- quicklook webview. */
-var storage = window.localStorage;
-var inputEvent = new CustomEvent("input");
-
-var codeFontSize = storage.getItem("fontSize");
-if(codeFontSize) {
-    codeSlider.value = codeFontSize;
-    codeSlider.dispatchEvent(inputEvent);
-}
-
-var screenFontSize = storage.getItem("screenSize");
-if(screenSize) {
-    screenSlider.value = screenFontSize;
-    screenSlider.dispatchEvent(inputEvent);
-}
-
-var listingWidth = storage.getItem("listingWidth");
-if(listingWidth) {
-    var widthSelector = document.getElementById('widthSelector');
-    widthSelector.value = listingWidth;
-    changeEvent = new CustomEvent("change");
-    widthSelector.dispatchEvent(changeEvent);
-}
+// force update for current settings on initial load
+screenSize();
+fontSize();
+codeWidth();
