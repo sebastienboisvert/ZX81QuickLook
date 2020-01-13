@@ -48,7 +48,7 @@ body {
     outline:0;
 }
 
-.barButton{
+.barButton,.infoButton{
     border:none;
     display:inline-block;
     padding:4px 16px;
@@ -70,6 +70,14 @@ body {
 .barButton.active{
     color:#000!important;
     background-color:#bbb!important;
+}
+
+.infoButton {
+    color: darkgrey;
+}
+
+.infoButton:hover {
+    color: white;
 }
 
 button{
@@ -126,4 +134,40 @@ select, input {
 .waveform-progress {
    clip-path: url("#waveform-mask");
    fill: darkgray;
+}
+
+.infoTitle {
+    font-family: "zx81";
+    font-size: 14px;
+    text-align: center;
+}
+
+#infoOverlay {
+  position: fixed; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 1;
+  cursor: pointer; /* Add a pointer on hover */
+  flex-direction: column;
+  flex-shrink: 0;
+
+}
+
+#info {
+    background-color: white;
+    margin: 80px;
+    padding: 10px;
+    overflow: scroll;
+    min-height: 100px;
+}
+
+#info a {
+    word-wrap: break-word;
+    text-decoration: none;
 }

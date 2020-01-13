@@ -41,6 +41,14 @@ function screenSize() {
     document.getElementById("screenListing").style.fontSize = sliderValue+"px";
 }
 
+function overlayOn() {
+  document.getElementById("infoOverlay").style.display = "flex";
+}
+
+function overlayOff() {
+  document.getElementById("infoOverlay").style.display = "none";
+}
+
 /* Sets up the audio wave */
 
 const SPACE_BETWEEN_BARS = -0.05; // from 0 (no gaps between bars) to 1 (only gaps - bars won't be visible)

@@ -23,6 +23,7 @@
                 <button class="barItem barButton active" onclick="openTab(event,'basic')">Listing</button>
                 <button class="barItem barButton" style="display: SCREEN_BUTTON_DISPLAY" onclick="openTab(event,'screen')">Screen</button>
                 <button class="barItem barButton" style="display: AUDIO_BUTTON_DISPLAY" onclick="openTab(event,'audio')">Audio</button>
+                <button class="barItem infoButton" style="float:right" onclick="overlayOn()">ℹ︎</button>
             </div>
         </div>
         
@@ -56,6 +57,77 @@
               </defs>
           </svg>
            <audio id="audio-element" controls="controls"></audio>
+        </div>
+        <div id="infoOverlay" onclick="overlayOff()">
+            <div id="info">
+                <p class="infoTitle">ZX81QUICKLOOK BY SEBASTIEN BOISVERT<br/>
+                    <a href="https://github.com/sebastienboisvert/ZX81QuickLook">HTTPS://GITHUB.COM/SEBASTIENBOISVERT/<br/>ZX81QUICKLOOK</a>
+                </p>
+                <p>Portions of ZX81QuickLook utilize the following material, the use of which is hereby acknowledged.</p>
+                
+                <p><b>ZX81 VDU font designed by Matthew Eagles</b><br/>
+                <a href="https://www.mattheweagles.co.uk/computing.htm">https://www.mattheweagles.co.uk/computing.htm</a>
+                </p>
+                <p>Save audio generator adapted from<br/>
+                <b>p2raw by Bert van Oortmarssen</b><br/>
+                Original code available from <a href="https://odemar.home.xs4all.nl/zx81/zx81.htm">https://odemar.home.xs4all.nl/zx81/zx81.htm</a>
+                </p>
+                
+                <p>Audio waveform generator adapted from<br/>
+                <b>Winds Waveform Example by Ken Hoff</b><br/>
+                <a href="https://github.com/kenhoff/winds-waveform-example">https://github.com/kenhoff/winds-waveform-example</a>
+                </p>
+                <hr>
+                ZX81QuickLook License<br/>
+                <pre>
+MIT License
+
+Copyright &copy; 2019 Sebastien Boisvert
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+                    </pre>
+                
+                Winds Waveform Example License<br/>
+                <pre>MIT License
+
+Copyright &copy; 2019 Ken Hoff
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+                </pre>
+                
+            </div>
         </div>
     </body>
 </html>

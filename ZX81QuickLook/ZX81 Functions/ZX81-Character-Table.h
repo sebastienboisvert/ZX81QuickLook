@@ -15,7 +15,7 @@
  
  The ZX81 VDU font was designed by Matthew Eagles and available
  at many font sites under the Creative Commons license:
- https://creativecommons.org/licenses/by-sa/3.0/
+ https://www.mattheweagles.co.uk/computing.htm
  
  */
 

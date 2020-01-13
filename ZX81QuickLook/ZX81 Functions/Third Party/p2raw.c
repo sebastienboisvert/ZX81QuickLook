@@ -6,6 +6,11 @@
        /* TASK ...... :  P to raw wav file 22kHz mono 8bits         */
        /*                                                           */
        /*************************************************************/
+
+/**
+ Original code available from https://odemar.home.xs4all.nl/zx81/zx81.htm
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
