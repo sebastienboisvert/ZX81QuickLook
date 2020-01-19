@@ -14,6 +14,8 @@
 #define progressFreqKey @"progressFreq"
 #define windowHeightKey @"windowHeight"
 #define windowWidthKey  @"windowWidth"
+#define audioVolumeKey  @"audioVolume"
+
 
 OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
                                CFURLRef url, CFStringRef contentTypeUTI,
@@ -36,11 +38,12 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
         NSUserDefaults *defaults = [[NSUserDefaults alloc]
                                     initWithSuiteName:@"com.sebastienboisvert.ZX81QuickLook"];
         [defaults registerDefaults:
-         @{autoWidthKey:@(NO),   // auto-width
-           fontSizeKey:@(15),    // code font size
-           screenSizeKey:@(15),  // screen font size
-           waveBarsKey:@(400),   // number of bars for soundwave
-           progressFreqKey:@(25) // update frequency in ms
+         @{autoWidthKey:@(NO),    // auto-width
+           fontSizeKey:@(15),     // code font size
+           screenSizeKey:@(15),   // screen font size
+           waveBarsKey:@(400),    // number of bars for soundwave
+           progressFreqKey:@(25), // update frequency in ms
+           audioVolumeKey:@(1.0)    // audio volume to set
          }];
         
         /* The line buffer for output of basic/screen lines. ZX81 BASIC cannot be
@@ -144,6 +147,12 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
         updateFreq = MIN(500,(MAX(updateFreq,25))); // range 25-500
         htmlString = [htmlString stringByReplacingOccurrencesOfString:@"WAVE_FREQ"
                                                            withString:@(updateFreq).stringValue];
+        
+        CGFloat audioVolume = [defaults floatForKey:audioVolumeKey];
+        audioVolume = MIN(1.0,(MAX(audioVolume,0.0))); // range 0-1
+        htmlString = [htmlString stringByReplacingOccurrencesOfString:@"VOLUME_PREF"
+                                                           withString:@(audioVolume).stringValue];
+
         
         // the desired window height/width, if any set, otherwise use the defaults
         NSUInteger windowWidth = [defaults integerForKey:windowWidthKey];

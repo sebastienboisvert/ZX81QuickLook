@@ -100,6 +100,7 @@ fetch(soundURL).then(response => {
                                             
             let audioElement = document.getElementById('audio-element');
             audioElement.src = soundURL;
+            audioElement.volume = AUDIO_VOLUME;
             let waveformProgress = document.getElementById('waveform-progress');
             // every WAVE_UPDATE_FREQ milliseconds, update the waveform-progress SVG with a new width - the percentage of time elapsed on the audio file
             setInterval(() => {
