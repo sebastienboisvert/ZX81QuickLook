@@ -74,6 +74,8 @@ body {
 
 .infoButton {
     color: darkgrey;
+    position:absolute;
+    right:0px;
 }
 
 .infoButton:hover {
