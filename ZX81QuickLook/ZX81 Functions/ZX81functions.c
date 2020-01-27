@@ -407,8 +407,6 @@ void get_save_sound(FILE *basic_file, char **outBuffer, size_t *outBufferSize) {
                 RawOut (outFile, basicFileDataBuffer[k]);
             }
         }
-                
-        free (basicFileDataBuffer);
         
 
         // Flush out the FILE output so buffers are updated
@@ -444,6 +442,9 @@ void get_save_sound(FILE *basic_file, char **outBuffer, size_t *outBufferSize) {
             *outBufferSize = newSoundBufferSize;
         }
     }
+    
+    free (basicFileDataBuffer);
+
 }
 
 
