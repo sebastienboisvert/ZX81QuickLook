@@ -329,7 +329,7 @@ void get_screen(struct string_buffer screenBuffer, FILE *basic_file) {
 
     /* finally, check if there's actual data (other than space & newline
         characters */
-    if(strspn(screenBuffer.buffer," \n")) {
+    if(strspn(screenBuffer.buffer," \n") == strlen(screenBuffer.buffer)) {
         // clear the buffer to indicate no content
         screenBuffer.buffer[0] = '\0';
     }
