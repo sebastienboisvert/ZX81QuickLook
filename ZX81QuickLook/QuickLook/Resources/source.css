@@ -108,11 +108,12 @@ select, input {
     margin: auto; /* auto-center */
     font-family: "zx81";
     word-wrap: break-word; /* break for wrapping at any character*/
-    white-space: pre; /* preserve all whitespace */
+    white-space: pre-wrap; /* preserve all whitespace, wrap as needed */
     max-width: 32ch; /* standard width of ZX81 display as default */
     min-width: 32ch; /* min width of standard width on ZX81*/
     line-height: 100%; /* make sure lines hug each other */
-    overflow-y: auto;
+    overflow-y: scroll; /* scroll vertically */
+    overflow-x: hidden; /* suppress horizontal scrolling (will wrap)*/
 }
 
 #screenListing {
