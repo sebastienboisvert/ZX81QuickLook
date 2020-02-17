@@ -15,6 +15,7 @@
 #define windowHeightKey @"windowHeight"
 #define windowWidthKey  @"windowWidth"
 #define audioVolumeKey  @"audioVolume"
+#define omitAudioKey    @"omitAudio"
 
 
 OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
@@ -43,7 +44,8 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
            screenSizeKey:@(15),   // screen font size
            waveBarsKey:@(400),    // number of bars for soundwave
            progressFreqKey:@(25), // update frequency in ms
-           audioVolumeKey:@(1.0)    // audio volume to set
+           audioVolumeKey:@(1.0), // audio volume to set
+           omitAudioKey:@(NO)     // include audio
          }];
         
         /* The line buffer for output of basic/screen lines. ZX81 BASIC cannot be
@@ -84,14 +86,16 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
                 get_basic_listing(codeBuffer,basic_file);
                 get_screen(screenBuffer,basic_file);
 
-                // generate the sound
-                char *soundBuffer = NULL;
-                size_t soundBufferSize = 0;
-                get_save_sound(basic_file, &soundBuffer, &soundBufferSize);
-                if(NULL != soundBuffer) {
-                    soundData = [NSData dataWithBytesNoCopy:soundBuffer
-                                                     length:soundBufferSize];
-                }                
+                if(NO == [defaults boolForKey:omitAudioKey]) {
+                    // generate the sound
+                    char *soundBuffer = NULL;
+                    size_t soundBufferSize = 0;
+                    get_save_sound(basic_file, &soundBuffer, &soundBufferSize);
+                    if(NULL != soundBuffer) {
+                        soundData = [NSData dataWithBytesNoCopy:soundBuffer
+                                                         length:soundBufferSize];
+                    }
+                }
             }
             
             fclose(basic_file);
