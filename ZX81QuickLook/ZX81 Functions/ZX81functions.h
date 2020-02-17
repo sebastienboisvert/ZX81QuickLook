@@ -51,7 +51,6 @@ struct string_buffer {
 /// @returns a ZX81_Program struct filled in with the appropriate info
 struct ZX81_Program checkFile(FILE *basicFile);
 
-
 /// Produces a listing into the provided buffer.
 /// @param buffer the string buffer to use for listing output
 /// @param basicFile the FILE pointer to a ZX81 BASIC program file
@@ -62,7 +61,12 @@ void get_basic_listing(struct string_buffer buffer,FILE *basicFile);
 /// @param basicFile the FILE pointer to a ZX81 BASIC program file
 void get_screen(struct string_buffer buffer, FILE *basicFile);
 
+/// Generates the sound of the save file as a WAV file buffer. 
+/// @param basic_file FILE input of the BASIC program file
+/// @param outBuffer a pointer to a char* buffer; upon successful processing
+/// of the BASIC file, this will contain the WAV data.
+/// @param outBufferSize a pointer to a size_t variable; upon successful
+/// processing this will contain the size of the buffer
 void get_save_sound(FILE *basic_file, char **outBuffer, size_t *outBufferSize);
-void create_wav_data(FILE *outFile);
 
 #endif /* ZX81functions_h */

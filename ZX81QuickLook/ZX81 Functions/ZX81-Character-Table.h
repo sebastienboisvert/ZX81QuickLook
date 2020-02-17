@@ -140,7 +140,7 @@ static const char* zx81_table[256] =
   "?"      /* 0x74  graphics                */,
   "?"      /* 0x75  edit                    */,
   "?"      /* 0x76  newline                 */,
-  "?"      /* 0x77  rubput                  */,
+  "?"      /* 0x77  rubout                  */,
   "?"      /* 0x78  K/L mode                */,
   "?"      /* 0x79  function                */,
   "?"      /* 0x7A  not used                */,

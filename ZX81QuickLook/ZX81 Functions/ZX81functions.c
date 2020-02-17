@@ -18,6 +18,9 @@
 
 #include "Third Party/p2raw.c"
 
+// forward declaration
+void create_wav_data(FILE *outFile);
+
 
 // PEEKs the value of a 2-byte word (2nd byte MSB)
 unsigned int getWord(FILE *in) {
@@ -245,8 +248,10 @@ void process_basic_line(struct string_buffer codeBuffer, FILE *in) {
     buffer_print(codeBuffer, "\n");
 }
 
-/* Produces the BASIC listing. First parameter is a string_buffer struct to
-output the listing to, and second is the FILE input of the program file. */
+/// Produces the BASIC listing. First parameter is a string_buffer struct to
+/// output the listing to, and second is the FILE input of the program file.
+/// @param codeBuffer the string buffer to use for listing output
+/// @param in the FILE pointer to a ZX81 BASIC program file
 void get_basic_listing(struct string_buffer codeBuffer, FILE *in) {
     
     fpos_t position; // holds current seek position in the file
@@ -375,7 +380,7 @@ void get_save_sound(FILE *basic_file, char **outBuffer, size_t *outBufferSize) {
         }
         
         /* ZX81 loading expects a program name, so we'll include one; as the
-         filename of the file been processed isn't guaranteed to have only
+         filename of the file being processed isn't guaranteed to have only
          printable characters, we'll use a generic name. */
         char *filename = "PRODUCED BY ZX81QUICKLOOK BY SEBASTIEN BOISVERt";
         char convertedFilename [strlen(filename)+1];
