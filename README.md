@@ -98,7 +98,7 @@ All sections (folders) of this project have more info related to that section, s
 
 I’d like to give thanks to the following individuals whose code/projects have made ZX81QuickLook possible:
 
-Michael Eagles for his [ZX81 VDU font](https://www.mattheweagles.co.uk/computing.htm)
+Matthew Eagles for his [ZX81 VDU font](https://www.mattheweagles.co.uk/computing.htm)
 
 [Ken Hoff](https://github.com/kenhoff) for the [audio visualizer](https://github.com/kenhoff/winds-waveform-example) code
 
