@@ -59,6 +59,12 @@
             ReferencedContainer = "container:ZX81QuickLook.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "&quot;$(SOURCE_ROOT)/Example Programs/Characters.P&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

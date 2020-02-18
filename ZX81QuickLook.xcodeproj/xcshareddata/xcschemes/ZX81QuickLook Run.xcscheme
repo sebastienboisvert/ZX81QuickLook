@@ -55,8 +55,8 @@
       </MacroExpansion>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-p $(SOURCE_ROOT)/somefile.p"
-            isEnabled = "NO">
+            argument = "-p &quot;$(SOURCE_ROOT)/Example Programs/Characters.P&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-g $(BUILT_PRODUCTS_DIR)/$(FULL_PRODUCT_NAME)"
@@ -76,20 +76,15 @@
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BE7FD1E32340426400F5629A"
-            BuildableName = "ZX81QuickLook.qlgenerator"
-            BlueprintName = "ZX81QuickLook"
-            ReferencedContainer = "container:ZX81QuickLook.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
+      <PathRunnable
+         runnableDebuggingMode = "0"
+         FilePath = "/System/Library/Frameworks/QuickLook.framework/Versions/A/Resources/quicklookd.app/Contents/MacOS/qlmanage">
+      </PathRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -40,6 +40,12 @@
 		BE473A75235FE585009347EF /* GeneratePreviewForURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratePreviewForURL.m; sourceTree = "<group>"; };
 		BE473A7A235FED21009347EF /* source.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = source.html; sourceTree = "<group>"; };
 		BE473A7B235FED21009347EF /* source.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = source.css; sourceTree = "<group>"; };
+		BE5BF51523FA3206007524A9 /* Characters.P */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = Characters.P; sourceTree = "<group>"; };
+		BE5BF51623FB5FAB007524A9 /* POKE2.p */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = POKE2.p; sourceTree = "<group>"; };
+		BE5BF51723FB5FAB007524A9 /* BASE.p */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = BASE.p; sourceTree = "<group>"; };
+		BE5BF51823FB5FAB007524A9 /* POKE1.p */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = POKE1.p; sourceTree = "<group>"; };
+		BE5BF51923FB5FAB007524A9 /* POKE3.p */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = POKE3.p; sourceTree = "<group>"; };
+		BE5BF51A23FB5FAB007524A9 /* POKE4.p */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = POKE4.p; sourceTree = "<group>"; };
 		BE7FD1E42340426400F5629A /* ZX81QuickLook.qlgenerator */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZX81QuickLook.qlgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE7FD1ED2340426400F5629A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE7FD1F92341A15800F5629A /* ZX81functions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZX81functions.h; sourceTree = "<group>"; };
@@ -98,11 +104,25 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		BE5BF51423FA31DF007524A9 /* Example Programs */ = {
+			isa = PBXGroup;
+			children = (
+				BE5BF51723FB5FAB007524A9 /* BASE.p */,
+				BE5BF51823FB5FAB007524A9 /* POKE1.p */,
+				BE5BF51623FB5FAB007524A9 /* POKE2.p */,
+				BE5BF51923FB5FAB007524A9 /* POKE3.p */,
+				BE5BF51A23FB5FAB007524A9 /* POKE4.p */,
+				BE5BF51523FA3206007524A9 /* Characters.P */,
+			);
+			path = "Example Programs";
+			sourceTree = "<group>";
+		};
 		BE7FD1DA2340426400F5629A = {
 			isa = PBXGroup;
 			children = (
 				BE7FD1E62340426400F5629A /* ZX81QuickLook */,
 				BEC24C1E235D3BE600CF5C34 /* ZX81QL */,
+				BE5BF51423FA31DF007524A9 /* Example Programs */,
 				BE7FD1E52340426400F5629A /* Products */,
 			);
 			sourceTree = "<group>";
