@@ -3,7 +3,7 @@
 This folder contains the main code for the Quicklook generator. The file `GeneratePreviewForURL.m` implements the main function to generate the preview. The general process is:
 
 1. Creates the buffers for holding the listing, screen and audio
-2. Checks the file for validity, then calls into the [functions](../ZX81%20Functions/README.md) to generate the data
+2. Checks the file for validity, then calls into the [functions](../ZX81%20Functions) to generate the data
 3. Substitutes in the generated data and various preference values into the `source.html` file in `Resources`
 4. Generates the final data representation with the updated source HTML and resource attachments back to the Quicklook system for display
 

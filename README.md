@@ -22,7 +22,7 @@ ZX81QuickLook aims to be as accurate as possible:
 * uses an accurate replica of the ZX81 font
 * great care has been taken to ensure it reproduces listings like a real ZX81 does, with the following exceptions:
 	* line length is enforced to ensure uncorrupted listing
-	* encountering early BASIC line termination/control codes will skip to the next BASIC line (more details on this available [here](./ZX81QuickLook/QuickLook/README.md))
+	* encountering early BASIC line termination/control codes will skip to the next BASIC line (more details on this available [here](./ZX81QuickLook/QuickLook))
 * generates save audio output that is accurate (tested with emulators, but not yet tested on a real ZX81).
 
 _Note_: while the audio is accurate, the displayed audio waveform is only an approximation of the generated audio.
@@ -31,7 +31,7 @@ _Note_: while the audio is accurate, the displayed audio waveform is only an app
 
 To install:
 
-* [Download](/releases) the latest release zip file, and unzip the file
+* [Download](https://github.com/sebastienboisvert/ZX81QuickLook/releases) the latest release zip file, and unzip the file
 * Copy the `ZX81QuickLook.qlgenerator` file to either of these locations:
 	* `/Library/QuickLook/` (preferred - requires system authentication)
 	* `~/Library/QuickLook/` (within your ‘home’ Library/QuickLook/ folder - may not work on newer macOS releases)
@@ -92,7 +92,7 @@ This is the basic implementation of the generator I had originally envisioned, h
 
 ## More info
 
-All sections (folders) of this project have more info related to that section, such as [the story](./ZX81QuickLook/README.md) of this project, the [parsing and output functions](./ZX81QuickLook/ZX81%20Functions/README.md), and [how to build](./ZX81QuickLook/QuickLook/README.md) it.
+All sections (folders) of this project have more info related to that section, such as [the story](./ZX81QuickLook) of this project, the [parsing and output functions](./ZX81QuickLook/ZX81%20Functions), and [how to build](./ZX81QuickLook/QuickLook) it.
 
 ## Special thanks
 

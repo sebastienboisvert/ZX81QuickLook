@@ -65,7 +65,7 @@ But I hit a snag.
 
 Initially, I thought that Quicklook previews using HTML as output couldn’t do audio, because trying to load the WAV file using a ‘cid:' resource (as Apple’s documentation suggest for Quicklook HTML resources) wouldn’t work, and I thought I’d have to forgo having the save audio as part of the preview :(
 
-Luckily, I remembered a trick I used at work for embedding data into HTML ([solution here](https://stackoverflow.com/questions/20312300/quicklook-generator-audio/24112975#24112975)), which worked flawlessly (and was quicker at loading the audio data to boot).
+Luckily, I remembered a trick I used at work for embedding data into HTML ([solution here](https://stackoverflow.com/a/60272186)), which worked flawlessly (and was quicker at loading the audio data to boot).
 
 And with that final piece of the puzzle in place, it was time to wrap the project up...
 
