@@ -23,7 +23,7 @@ ZX81QuickLook aims to be as accurate as possible:
 * great care has been taken to ensure it reproduces listings like a real ZX81 does, with the following exceptions:
 	* line length is enforced to ensure uncorrupted listing
 	* encountering early BASIC line termination/control codes will skip to the next BASIC line (more details on this available [here](./ZX81QuickLook))
-* generates save audio output that is accurate (tested with emulators, but not yet tested on a real ZX81).
+* generates save audio output that is accurate (tested with emulators, and on a real ZX81).
 
 _Note_: while the audio is accurate, the displayed audio waveform is only an approximation of the generated audio.
 
